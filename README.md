@@ -1,8 +1,8 @@
 
 #Talk Map
 
-1. react native
-2. dva Framework (React and redux based, lightweight and elm-style framework)
+1. react-native
+2. dva Framework (React and redux based, lightweight and elm-style framework) (react-native @0.38.0)
 3. antd-mobile GUI Framework
 4. react-native-router-flux
 5. Google firebase
@@ -11,6 +11,8 @@
 
 
 >npm install
+
 >react-native run-android
+
 
 
