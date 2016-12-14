@@ -25,11 +25,12 @@ render() {
        <MapView
          style={styles.map}
          region={{
-           latitude: 37.78825,
-           longitude: -122.4324,
-           latitudeDelta: 0.015,
-           longitudeDelta: 0.0121,
+            latitude: 24.795258,
+            longitude: 120.996351,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
          }}
+         showsUserLocation
        />
      </View>
    );
