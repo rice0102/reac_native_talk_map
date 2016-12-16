@@ -21,7 +21,7 @@ const RouterComponent = ({ dispatch }) => {
         key="splash"
         hideNavBar
         passProps
-        splashText="TalkMap"
+        splashText="Talk Map"
         component={Splash}
       />
 
