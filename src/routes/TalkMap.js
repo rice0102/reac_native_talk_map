@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Dimensions, TextInput } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import MapView from 'react-native-maps';
 import { connect } from 'dva/mobile';
 import {
   WhiteSpace,
   Button,
   Flex,
-  ActivityIndicator
+  ActivityIndicator,
+  InputItem
 } from 'antd-mobile';
 
 class TalkMap extends Component {
@@ -65,20 +66,20 @@ class TalkMap extends Component {
         <MapView
           style={styles.map}
           initialRegion={initialRegion}
-          //region={region}
-          //showsUserLocation
-          //onRegionChange={this.onRegionChange.bind(this)}
+          region={region}
+          showsUserLocation
+          onRegionChange={this.onRegionChange.bind(this)}
         >
           {this.renderMarker()}
         </MapView>
         <WhiteSpace size="lg" />
         <Flex style={styles.flexStyle}>
           <Flex.Item style={{ flex: 2 }}>
-            <TextInput
+            <InputItem
               style={styles.input}
               value={text}
               placeholder="Say Something Here..."
-              onChangeText={this.onMessageChange.bind(this)}
+              onChange={this.onMessageChange.bind(this)}
             />
           </Flex.Item>
 
@@ -106,14 +107,6 @@ const styles = StyleSheet.create({
   },
   flexStyle: {
     backgroundColor: 'white',
-    borderRadius: 5,
-  },
-  input: {
-    padding: 4,
-    margin: 5,
-    width: 260,
-    height: 40,
-    alignSelf: 'center'
   },
   buttonStyle: {
     margin: 15,
