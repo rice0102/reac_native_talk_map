@@ -7,7 +7,7 @@ const INITIAL_STATE = {
   error: '',
   loading: false,
   list: {
-    text: ''
+    message: ''
   }
 };
 
@@ -19,10 +19,10 @@ export default {
       return { ...state, loading: true, error: '' };
     },
     textChanged(state, action) {
-      return { ...state, text: action.payload };
+      return { ...state, message: action.payload };
     },
     sendSuccess(state, action) {
-      return { ...state, sendStatus: action.payload, text: '', loading: false };
+      return { ...state, sendStatus: action.payload, message: '', loading: false };
     },
     fetchSuccess(state, action) {
       return { ...state, list: action.payload };
@@ -31,9 +31,9 @@ export default {
   effects: {
    * messageSend({ payload }, { call, put }) {
       yield put({ type: 'showLoading' });
-      const { text } = payload;
-      const message = yield call(createMessage, { text });
-      yield put({ type: 'sendSuccess', payload: message });
+      const { message, latitude, longitude } = payload;
+      const user = yield call(createMessage, { message, latitude, longitude });
+      yield put({ type: 'sendSuccess', payload: user });
     },
   },
   subscriptions: {

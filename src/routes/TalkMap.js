@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import { Text, View, StyleSheet } from 'react-native';
 import MapView from 'react-native-maps';
 import { connect } from 'dva/mobile';
@@ -18,18 +19,18 @@ class TalkMap extends Component {
     });
   }
 
-  onMessageChange(text) {
+  onMessageChange(message) {
     this.props.dispatch({
       type: 'Message/textChanged',
-      payload: text
+      payload: message
     });
   }
 
   onSendPress() {
-    const { text } = this.props;
+    const { message, markerPosition } = this.props;
     this.props.dispatch({
       type: 'Message/messageSend',
-      payload: { text }
+      payload: { message, latitude: markerPosition.latitude, longitude: markerPosition.longitude }
     });
   }
 
@@ -38,28 +39,38 @@ class TalkMap extends Component {
     if (loading) return <ActivityIndicator size="large" />;
 
     return (
-      <Button type="primary" style={styles.buttonStyle} onClick={this.onSendPress.bind(this)}>
+      <Button
+        type="primary"
+        style={styles.buttonStyle}
+        onClick={this.onSendPress.bind(this)}
+      >
         Send
       </Button>
     );
   }
-  renderMarker() {
-    const { userPosition, list } = this.props;
 
-    if (!list) return <MapView.Marker coordinate={userPosition} />;
-    return (
-       <MapView.Marker coordinate={userPosition}>
-        <MapView.Callout style={styles.customView}>
+  renderMarker() {
+    const { markers } = this.props;
+   return markers.map(data => {
+      const markerCoordinate = {
+          latitude: data.latitude,
+          longitude: data.longitude
+      };
+      return (
+        <MapView.Marker coordinate={markerCoordinate} key={data.uid}>
+          <MapView.Callout style={styles.customView}>
             <View>
-              <Text>{list.text}</Text>
+              <Text>{data.uid}</Text>
+              <Text>{data.message}</Text>
             </View>
-        </MapView.Callout>
-       </MapView.Marker>
-    );
+          </MapView.Callout>
+        </MapView.Marker>
+      );
+    });
   }
 
   render() {
-    const { initialRegion, region, text } = this.props;
+    const { initialRegion, region, message } = this.props;
 
     return (
       <View style={styles.mapcontainer}>
@@ -71,18 +82,18 @@ class TalkMap extends Component {
           onRegionChange={this.onRegionChange.bind(this)}
         >
           {this.renderMarker()}
+
         </MapView>
         <WhiteSpace size="lg" />
         <Flex style={styles.flexStyle}>
           <Flex.Item style={{ flex: 2 }}>
             <InputItem
               style={styles.input}
-              value={text}
-              placeholder="Say Something Here..."
+              value={message}
+              placeholder='Say Something Here...'
               onChange={this.onMessageChange.bind(this)}
             />
           </Flex.Item>
-
           <Flex.Item>
             {this.renderButton()}
           </Flex.Item>
@@ -97,7 +108,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mapcontainer: {
-    flex: 1,
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -121,10 +131,12 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ Map, Message }) => {
-  const { regionMessage, region, initialRegion, userPosition } = Map;
-  const { text, sendStatus, loading, list } = Message;
-
-  return { regionMessage, region, initialRegion, userPosition, text, sendStatus, loading, list };
+  const { regionMessage, region, initialRegion, markerPosition } = Map;
+  const { message, loading } = Message;
+  const markers = _.map(Map.marker, (val, uid) => {
+    return { ...val, uid };
+  });
+  return { markers, regionMessage, region, initialRegion, markerPosition, message, loading };
 };
 
 export default connect(mapStateToProps)(TalkMap);

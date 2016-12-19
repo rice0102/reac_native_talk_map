@@ -1,5 +1,5 @@
-import { Actions } from 'react-native-router-flux';
 import { Dimensions } from 'react-native';
+import { fetchMarkers } from '../services/Map';
 
 const INITIAL_STATE = {
     initialRegion: {
@@ -15,28 +15,32 @@ export default {
   namespace: 'Map',
   state: { ...INITIAL_STATE },
   reducers: {
+    fetchSuccess(state, action) {
+      return { ...state, marker: action.payload };
+    },
     onRegionChange(state, action) {
       return { ...state, region: action.payload };
     },
-
     getCurrentPosition(state, action) {
-      const userPosition = {
-        latitude: action.payload.latitude,
-        longitude: action.payload.longitude
-      };
-
-      return { ...state, initialRegion: action.payload, userPosition };
+      return { ...state, initialRegion: action.payload };
+    },
+    userPositionChange(state, action) {
+       return { ...state, markerPosition: action.payload };
     }
   },
   effects: {
 
   },
   subscriptions: {
-   setup({ dispatch }) {
+   mapinit({ dispatch }) {
     const { width, height } = Dimensions.get('window');
     const ASPECT_RATIO = width / height;
     const LATITUDE_DELTA = 0.01;
     const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+    fetchMarkers((val) => {
+      dispatch({ type: 'fetchSuccess', payload: val });
+    });
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -61,7 +65,12 @@ export default {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA
       };
+      const newloaction = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      };
       dispatch({ type: 'onRegionChange', payload: newRegion });
+      dispatch({ type: 'userPositionChange', payload: newloaction });
     });
     }
   }
