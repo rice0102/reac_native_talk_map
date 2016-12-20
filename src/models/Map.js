@@ -1,5 +1,6 @@
 import { Dimensions } from 'react-native';
-import { fetchMarkers } from '../services/Map';
+import firebase from 'firebase';
+import { fetchMarkers, updatePosistion } from '../services/Map';
 
 const INITIAL_STATE = {
     initialRegion: {
@@ -18,6 +19,10 @@ export default {
     fetchSuccess(state, action) {
       return { ...state, marker: action.payload };
     },
+    updateSuccess(state, action) {
+      console.log('updateSuccess');
+      return { ...state, updatestatus: action.payload };
+    },
     onRegionChange(state, action) {
       return { ...state, region: action.payload };
     },
@@ -29,49 +34,57 @@ export default {
     }
   },
   effects: {
-
+    * updateUserPosition({ payload }, { call, put }) {
+      //console.log(payload);
+      yield call(updatePosistion, payload);
+      yield put({ type: 'userPositionChange', payload });
+    },
   },
   subscriptions: {
    mapinit({ dispatch }) {
-    const { width, height } = Dimensions.get('window');
-    const ASPECT_RATIO = width / height;
-    const LATITUDE_DELTA = 0.01;
-    const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+     firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          const { width, height } = Dimensions.get('window');
+          const ASPECT_RATIO = width / height;
+          const LATITUDE_DELTA = 0.01;
+          const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-    fetchMarkers((val) => {
-      dispatch({ type: 'fetchSuccess', payload: val });
-    });
+          fetchMarkers((val) => {
+            dispatch({ type: 'fetchSuccess', payload: val });
+          });
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        dispatch({
-          type: 'getCurrentPosition',
-          payload: {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              latitudeDelta: LATITUDE_DELTA,
-              longitudeDelta: LONGITUDE_DELTA
-          }
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            dispatch({
+              type: 'getCurrentPosition',
+              payload: {
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+                  latitudeDelta: LATITUDE_DELTA,
+                  longitudeDelta: LONGITUDE_DELTA
+              }
+            });
+          },
+          (error) => alert(error.message),
+          { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+        );
+
+        this.watchID = navigator.geolocation.watchPosition((position) => {
+          const newRegion = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA
+          };
+          const newloaction = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          };
+          dispatch({ type: 'onRegionChange', payload: newRegion });
+          dispatch({ type: 'updateUserPosition', payload: newloaction });
         });
-      },
-      (error) => alert(error.message),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
-
-    this.watchID = navigator.geolocation.watchPosition((position) => {
-      const newRegion = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA
-      };
-      const newloaction = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      };
-      dispatch({ type: 'onRegionChange', payload: newRegion });
-      dispatch({ type: 'userPositionChange', payload: newloaction });
-    });
+      }
+     });
     }
   }
 };

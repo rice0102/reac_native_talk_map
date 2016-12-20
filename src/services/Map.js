@@ -1,8 +1,7 @@
 import firebase from 'firebase';
 
 export function fetchMarkers(callback) {
- // const { currentUser } = firebase.auth();
-  const ref = firebase.database().ref('/users/map/');
+  const ref = firebase.database().ref('/talkmap/');
   const handler = (snapshot) => {
     callback(snapshot.val());
   };
@@ -10,4 +9,12 @@ export function fetchMarkers(callback) {
   return () => {
     ref.off('value', handler);
   };
+}
+
+export function updatePosistion(data) {
+  const { currentUser } = firebase.auth();
+  return firebase.database().ref(`/talkmap/${currentUser.uid}/latlon`)
+    .set(data)
+    .then((user) => ({ user }))
+    .catch((err) => ({ err }));
 }

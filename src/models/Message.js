@@ -31,8 +31,9 @@ export default {
   effects: {
    * messageSend({ payload }, { call, put }) {
       yield put({ type: 'showLoading' });
-      const { message, latitude, longitude } = payload;
-      const user = yield call(createMessage, { message, latitude, longitude });
+      const { message, markerPosition } = payload;
+      const latlon = markerPosition;
+      const user = yield call(createMessage, { message, latlon });
       yield put({ type: 'sendSuccess', payload: user });
     },
   },

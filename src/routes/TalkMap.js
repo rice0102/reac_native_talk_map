@@ -30,7 +30,7 @@ class TalkMap extends Component {
     const { message, markerPosition } = this.props;
     this.props.dispatch({
       type: 'Message/messageSend',
-      payload: { message, latitude: markerPosition.latitude, longitude: markerPosition.longitude }
+      payload: { message, markerPosition }
     });
   }
 
@@ -51,22 +51,18 @@ class TalkMap extends Component {
 
   renderMarker() {
     const { markers } = this.props;
-   return markers.map(data => {
-      const markerCoordinate = {
-          latitude: data.latitude,
-          longitude: data.longitude
-      };
-      return (
-        <MapView.Marker coordinate={markerCoordinate} key={data.uid}>
-          <MapView.Callout style={styles.customView}>
-            <View>
-              <Text>{data.uid}</Text>
-              <Text>{data.message}</Text>
-            </View>
-          </MapView.Callout>
-        </MapView.Marker>
-      );
-    });
+    return markers.map(data => {
+        return (
+          <MapView.Marker coordinate={data.latlon} key={data.uid}>
+            <MapView.Callout style={styles.customView}>
+              <View>
+                <Text>{data.uid}</Text>
+                <Text>{data.message}</Text>
+              </View>
+            </MapView.Callout>
+          </MapView.Marker>
+        );
+      });
   }
 
   render() {
