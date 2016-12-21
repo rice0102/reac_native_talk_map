@@ -12,6 +12,10 @@ import {
 } from 'antd-mobile';
 
 class TalkMap extends Component {
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
+  }
+
   onRegionChange(region) {
     this.props.dispatch({
       type: 'Map/onRegionChange',
@@ -52,11 +56,23 @@ class TalkMap extends Component {
   renderMarker() {
     const { markers } = this.props;
     return markers.map(data => {
+        let photo = data.userDetail.photoUrl;
+        if (photo === '') {
+          photo = 'https://cdn4.iconfinder.com/data/icons/gradient-ui-1/512/navigation-64.png';
+        }
         return (
-          <MapView.Marker coordinate={data.latlon} key={data.uid}>
-            <MapView.Callout style={styles.customView}>
+          <MapView.Marker image={{ uri: photo }} coordinate={data.latlon} key={data.uid}>
+            <MapView.Callout
+              style={styles.customView}
+              onPress={() => {
+                this.props.dispatch({
+                  type: 'Message/openChatRoom',
+                  payload: data
+                });
+              }}
+            >
               <View>
-                <Text>{data.uid}</Text>
+                <Text>{data.userDetail.name} :</Text>
                 <Text>{data.message}</Text>
               </View>
             </MapView.Callout>
@@ -84,7 +100,6 @@ class TalkMap extends Component {
         <Flex style={styles.flexStyle}>
           <Flex.Item style={{ flex: 2 }}>
             <InputItem
-              style={styles.input}
               value={message}
               placeholder='Say Something Here...'
               onChange={this.onMessageChange.bind(this)}
@@ -127,12 +142,12 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ Map, Message }) => {
-  const { regionMessage, region, initialRegion, markerPosition } = Map;
+  const { region, initialRegion, markerPosition } = Map;
   const { message, loading } = Message;
   const markers = _.map(Map.marker, (val, uid) => {
     return { ...val, uid };
   });
-  return { markers, regionMessage, region, initialRegion, markerPosition, message, loading };
+  return { markers, region, initialRegion, markerPosition, message, loading };
 };
 
 export default connect(mapStateToProps)(TalkMap);

@@ -3,7 +3,7 @@ import firebase from 'firebase';
 export function createMessage(data) {
   const { currentUser } = firebase.auth();
   return firebase.database().ref(`/talkmap/${currentUser.uid}/`)
-    .set(data)
+    .update(data)
     .then((user) => ({ user }))
     .catch((err) => ({ err }));
 }

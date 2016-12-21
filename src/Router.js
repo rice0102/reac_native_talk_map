@@ -5,8 +5,7 @@ import { Scene, Router } from 'react-native-router-flux';
 import Splash from './components/Splash';
 
 import LoginForm from './routes/LoginForm';
-import Hello from './routes/HelloComponent';
-import AsyncHello from './routes/AsyncHelloHelloComponent';
+import ChatRoom from './routes/ChatRoom';
 import TalkMap from './routes/TalkMap';
 
 const RouterComponent = ({ dispatch }) => {
@@ -40,9 +39,9 @@ const RouterComponent = ({ dispatch }) => {
         />
 
         <Scene
-          key="asyncHello"
-          component={AsyncHello}
-          title="AsyncHello"
+          key="chatRoom"
+          component={ChatRoom}
+          title="Chat Room"
         />
       </Scene>
     </Router>

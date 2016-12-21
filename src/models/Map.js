@@ -1,5 +1,6 @@
-import { Dimensions } from 'react-native';
 import firebase from 'firebase';
+import { Dimensions } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import { fetchMarkers, updatePosistion } from '../services/Map';
 
 const INITIAL_STATE = {
@@ -19,10 +20,6 @@ export default {
     fetchSuccess(state, action) {
       return { ...state, marker: action.payload };
     },
-    updateSuccess(state, action) {
-      console.log('updateSuccess');
-      return { ...state, updatestatus: action.payload };
-    },
     onRegionChange(state, action) {
       return { ...state, region: action.payload };
     },
@@ -31,14 +28,14 @@ export default {
     },
     userPositionChange(state, action) {
        return { ...state, markerPosition: action.payload };
-    }
+    },
   },
   effects: {
     * updateUserPosition({ payload }, { call, put }) {
-      //console.log(payload);
-      yield call(updatePosistion, payload);
       yield put({ type: 'userPositionChange', payload });
+      yield call(updatePosistion, payload);
     },
+
   },
   subscriptions: {
    mapinit({ dispatch }) {
@@ -83,6 +80,8 @@ export default {
           dispatch({ type: 'onRegionChange', payload: newRegion });
           dispatch({ type: 'updateUserPosition', payload: newloaction });
         });
+      } else {
+          Actions.auth();
       }
      });
     }
