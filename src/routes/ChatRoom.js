@@ -64,7 +64,7 @@ class ChatRoom extends Component {
               />
             </Flex.Item>
             <Flex.Item style={{ flex: 1 }}>
-              {this.renderButton.bind(this)}
+              {this.renderButton()}
             </Flex.Item>
             </Flex>
         </WingBlank>
