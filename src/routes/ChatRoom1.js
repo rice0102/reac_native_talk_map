@@ -15,6 +15,22 @@ import { fetchChatMessage } from '../services/Message';
 
 class ChatRoom extends Component {
 
+  componentWillMount() {
+    const { uid, chatList } = this.props;
+    console.log(uid);
+    console.log(chatList);
+    this.watchChat = fetchChatMessage(uid, this.chatMessageList.bind(this));
+    console.log(this.watchChat);
+  }
+  chatMessageList(val) {
+    if (val !== null) {
+      const messages = val;
+      this.props.dispatch({
+        type: 'Message/loadSuccess',
+        payload: { messages }
+      });
+    }
+  }
   onChatRoomMessageChange(chatMessage) {
     this.props.dispatch({
       type: 'Message/chatRoomTextChanged',
@@ -22,10 +38,10 @@ class ChatRoom extends Component {
     });
   }
   onChatPress() {
-    const { chatMessage, whoTalkTo, roomName, uid } = this.props;
+    const { chatMessage, whoTalkTo, uid } = this.props;
     this.props.dispatch({
       type: 'Message/chatMessageSend',
-      payload: { chatMessage, whoTalkTo, roomName, uid }
+      payload: { chatMessage, whoTalkTo, uid }
     });
   }
 
@@ -44,7 +60,7 @@ class ChatRoom extends Component {
   }
 
   render() {
-    const { whoTalkTo, chatMessage } = this.props;
+    const { whoTalkTo, chatMessage, chatList } = this.props;
     //console.log(chatList);
     return (
       <ScrollView style={{ flex: 1 }} >
@@ -87,9 +103,9 @@ class ChatRoom extends Component {
 }
 
 const mapStateToProps = ({ Message }) => {
-  const { loading, roomName, chatMessage, whoTalkTo, uid } = Message;
+  const { chatMessage, whoTalkTo, loading, chatList, uid } = Message;
 
-  return { chatMessage, loading, roomName, whoTalkTo, uid };
+  return { whoTalkTo, chatMessage, loading, chatList, uid };
 };
 
 export default connect(mapStateToProps)(ChatRoom);
