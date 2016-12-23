@@ -4,19 +4,21 @@ import {
   createMessage,
   fetchMessage,
   roomOpen,
-  updateChatMessage2
+  updateChatMessage,
+  fetchChats,
+  fetchUserDetail
 } from '../services/Message';
 
 const INITIAL_STATE = {
   error: '',
   loading: false,
   chatMessage: '',
-  message: ''
+  message: '',
 };
 
 export default {
   namespace: 'Message',
-  state: { ...INITIAL_STATE },
+  state: { ...INITIAL_STATE, chatList: {} },
   reducers: {
     showLoading(state) {
       return { ...state, loading: true, error: '' };
@@ -41,8 +43,17 @@ export default {
       return { ...state, roomName: action.payload };
     },
     chatUserData(state, action) {
-       return { ...state, whoTalkTo: action.payload.userDetail, uid: action.payload.uid };
-    }
+       return { ...state, whoTalkTo: action.payload.userDetail };
+    },
+    fetchUserSuccess(state, action) {
+        console.log(action.payload);
+       return { ...state, userDetail: action.payload };
+    },
+    loadChatsSuccess(state, action) {
+      console.log('loadChatsSuccessreducer');
+      console.log(action.payload);
+      return { ...state, chatList: action.payload };
+    },
   },
   effects: {
    * messageSend({ payload }, { call, put }) {
@@ -54,33 +65,37 @@ export default {
     },
   * openChatRoom({ payload }, { call, put }) {
       const room = yield call(roomOpen, payload);
+      console.log(room);
       if (room !== 'Me') {
         yield put({ type: 'chatRoomOpenSuccess', payload: room.roomName });
         yield put({ type: 'chatUserData', payload });
         Actions.chatRoom();
-      } else {
-        alert('不要自己玩');
-      }
+      } else { alert('不要自己玩'); }
     },
   * chatMessageSend({ payload }, { call, put }) {
       yield put({ type: 'showLoading' });
-      const { chatMessage, whoTalkTo, roomName, uid } = payload;
+      const { chatMessage, roomName, userDetail } = payload;
       const Messages = {
-        uid,
-        name: whoTalkTo.name,
+        name: userDetail.name,
         msg: chatMessage,
         time: '',
-        photoURL: whoTalkTo.photoUrl
+        photoURL: userDetail.photoUrl
       };
-      console.log(roomName);
-      const room = yield call(updateChatMessage2, { Messages, roomName });
+      const room = yield call(updateChatMessage, { Messages, roomName });
       yield put({ type: 'sendSuccess', payload: room.roomName });
+    },
+    * loadChats({ payload }, { call, put }) {
+      const chats = yield call(fetchChats, payload);
+      yield put({ type: 'loadChatsSuccess', payload: chats });
     }
   },
   subscriptions: {
     setup({ dispatch }) {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
+          fetchUserDetail((val) => {
+            dispatch({ type: 'fetchUserSuccess', payload: val });
+          });
           fetchMessage((val) => {
             dispatch({ type: 'fetchSuccess', payload: val });
           });
