@@ -4,7 +4,6 @@ import dva from 'dva/mobile';
 
 import Initial from './src/models/Initial';
 import Auth from './src/models/Auth';
-//import Hello from './src/models/Hello';
 import Map from './src/models/Map';
 import Message from './src/models/Message';
 
@@ -14,7 +13,6 @@ const app = dva();
 
 app.model(Initial);
 app.model(Auth);
-//app.model(Hello);
 app.model(Map);
 app.model(Message);
 

@@ -1,12 +1,12 @@
 
-#Talk Map 
+#Talk Map
 
 Use react-native with firebase create an app. (android now)
 
 This project can :
 
-* Login 
-* Show user loaction with google map.
+* Login
+* Show user loaction with google map.(trun on the GPS)
 * When click user marker show what user said last time.
 * Click other user's callout message can open the chat room and talk to him/her.
 

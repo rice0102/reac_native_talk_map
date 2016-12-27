@@ -67,3 +67,22 @@ export function fetchChatMessage(room, callback) {
     ref.off('value', handler);
   };
 }
+
+function fetch(child) {
+  return new Promise((resolve, reject) => {
+    firebase.database().ref(child).on('value', snapshot => {
+      const val = snapshot.val();
+      if (val) {
+        resolve(val);
+      } else {
+        setTimeout(() => {
+          fetch(child).then(val => resolve(val));
+        }, 500);
+      }
+    }, reject);
+  });
+}
+
+export function fetchChats(room) {
+  return fetch(`chats/${room}`);
+}

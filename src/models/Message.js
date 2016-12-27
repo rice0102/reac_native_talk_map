@@ -13,7 +13,7 @@ const INITIAL_STATE = {
   error: '',
   loading: false,
   chatMessage: '',
-  message: '',
+  message: ''
 };
 
 export default {
@@ -35,23 +35,16 @@ export default {
     fetchSuccess(state, action) {
       return { ...state, list: action.payload };
     },
-    loadSuccess(state, action) {
-      const { messages } = action.payload;
-      return { ...state, chatList: action.payload };
-    },
     chatRoomOpenSuccess(state, action) {
       return { ...state, roomName: action.payload };
     },
     chatUserData(state, action) {
-       return { ...state, whoTalkTo: action.payload.userDetail };
+      return { ...state, whoTalkTo: action.payload.userDetail };
     },
     fetchUserSuccess(state, action) {
-        console.log(action.payload);
-       return { ...state, userDetail: action.payload };
+      return { ...state, userDetail: action.payload };
     },
     loadChatsSuccess(state, action) {
-      console.log('loadChatsSuccessreducer');
-      console.log(action.payload);
       return { ...state, chatList: action.payload };
     },
   },
@@ -65,12 +58,11 @@ export default {
     },
   * openChatRoom({ payload }, { call, put }) {
       const room = yield call(roomOpen, payload);
-      console.log(room);
       if (room !== 'Me') {
         yield put({ type: 'chatRoomOpenSuccess', payload: room.roomName });
         yield put({ type: 'chatUserData', payload });
         Actions.chatRoom();
-      } else { alert('不要自己玩'); }
+      } else { alert('Can not talk to yourself!!!!'); }
     },
   * chatMessageSend({ payload }, { call, put }) {
       yield put({ type: 'showLoading' });

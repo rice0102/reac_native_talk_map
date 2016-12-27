@@ -10,7 +10,6 @@ import {
   ActivityIndicator,
   InputItem
 } from 'antd-mobile';
-
 import { fetchChatMessage } from '../services/Message';
 
 class ChatRoom extends Component {
@@ -19,9 +18,11 @@ class ChatRoom extends Component {
     this.createDataSource(chatList);
     fetchChatMessage(roomName, this.onChatMessage.bind(this));
   }
+
   componentWillReceiveProps(nextProps) {
     this.createDataSource(nextProps.chatList);
   }
+
   onChatMessage(val) {
     if (val !== null) {
       this.props.dispatch({
@@ -30,12 +31,14 @@ class ChatRoom extends Component {
       });
     }
   }
+
   onChatRoomMessageChange(chatMessage) {
     this.props.dispatch({
       type: 'Message/chatRoomTextChanged',
       payload: chatMessage
     });
   }
+
   onChatPress() {
     const { chatMessage, whoTalkTo, roomName, userDetail } = this.props;
     this.props.dispatch({
@@ -43,10 +46,12 @@ class ChatRoom extends Component {
       payload: { chatMessage, whoTalkTo, roomName, userDetail }
     });
   }
+
   createDataSource(chatList) {
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.dataSource = ds.cloneWithRows(chatList);
   }
+
   renderRow(chatMessage) {
     const { name, msg, photoURL } = chatMessage;
     return (
@@ -64,6 +69,7 @@ class ChatRoom extends Component {
       </View>
     );
   }
+
   renderButton() {
      const { loading } = this.props;
      if (loading) return <ActivityIndicator size="large" />;
@@ -90,7 +96,7 @@ class ChatRoom extends Component {
           </Card>
         </WingBlank>
 
-        <WingBlank style={{ marginTop: 15, marginBottom: 15, borderBottomWidth: 1, borderColor: 'gray',paddingBottom:20 }}>
+        <WingBlank style={{ marginTop: 15, marginBottom: 15, borderBottomWidth: 1, borderColor: 'gray', paddingBottom: 20 }}>
           <ListView
             enableEmptySections
             dataSource={this.dataSource}
