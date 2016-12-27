@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import { View, Image, Text, ScrollView, ListView } from 'react-native';
 import { connect } from 'dva/mobile';

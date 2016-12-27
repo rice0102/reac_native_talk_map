@@ -21,11 +21,6 @@ export function fetchMessage(callback) {
   };
 }
 
-export function loadChatMessage(id) {
-  const uid = firebase.auth().currentUser.uid;
-  return fetch(`chat/${uid}/${id.uid}`);
-}
-
 //=========================chat=============================================
 export function fetchUserDetail(callback) {
   const { currentUser } = firebase.auth();
