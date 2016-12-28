@@ -84,7 +84,7 @@ class ChatRoom extends Component {
     const { whoTalkTo, chatMessage } = this.props;
     return (
       <ScrollView style={{ flex: 1 }} >
-        <WingBlank size="lg">
+        <WingBlank size="lg" style={{ marginTop: 15 }}>
           <Card>
             <Card.Header
               title={whoTalkTo.name}

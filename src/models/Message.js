@@ -47,6 +47,9 @@ export default {
     loadChatsSuccess(state, action) {
       return { ...state, chatList: action.payload };
     },
+    clearChatRoom(state) {
+      return { ...state, ...INITIAL_STATE, chatList: {} };
+    }
   },
   effects: {
    * messageSend({ payload }, { call, put }) {
@@ -59,6 +62,7 @@ export default {
   * openChatRoom({ payload }, { call, put }) {
       const room = yield call(roomOpen, payload);
       if (room !== 'Me') {
+        yield put({ type: 'clearChatRoom' });
         yield put({ type: 'chatRoomOpenSuccess', payload: room.roomName });
         yield put({ type: 'chatUserData', payload });
         Actions.chatRoom();

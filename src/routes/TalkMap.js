@@ -12,7 +12,6 @@ import {
 } from 'antd-mobile';
 
 class TalkMap extends Component {
-
   onRegionChange(region) {
     this.props.dispatch({
       type: 'Map/onRegionChange',
