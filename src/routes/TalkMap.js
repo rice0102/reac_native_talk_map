@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
 import _ from 'lodash';
+import React, { Component } from 'react';
+import { connect } from 'dva/mobile';
 import { Text, View, StyleSheet } from 'react-native';
 import MapView from 'react-native-maps';
-import { connect } from 'dva/mobile';
 import {
   WhiteSpace,
   Button,
@@ -12,9 +12,6 @@ import {
 } from 'antd-mobile';
 
 class TalkMap extends Component {
-  componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.watchID);
-  }
 
   onRegionChange(region) {
     this.props.dispatch({
@@ -55,30 +52,30 @@ class TalkMap extends Component {
 
   renderMarker() {
     const { markers } = this.props;
-    return markers.map(data => {
-        let photo = data.userDetail.photoUrl;
-        if (photo === '') {
-          photo = 'https://cdn4.iconfinder.com/data/icons/gradient-ui-1/512/navigation-64.png';
-        }
-        return (
-          <MapView.Marker image={{ uri: photo }} coordinate={data.latlon} key={data.uid}>
-            <MapView.Callout
-              style={styles.customView}
-              onPress={() => {
-                this.props.dispatch({
-                  type: 'Message/openChatRoom',
-                  payload: data
-                });
-              }}
-            >
-              <View>
-                <Text>{data.userDetail.name} :</Text>
-                <Text>{data.message}</Text>
-              </View>
-            </MapView.Callout>
-          </MapView.Marker>
-        );
-      });
+      return markers.map(data => {
+          let photo = data.userDetail.photoUrl;
+          if (photo === '') {
+            photo = 'https://cdn4.iconfinder.com/data/icons/gradient-ui-1/512/navigation-64.png';
+          }
+          return (
+            <MapView.Marker image={{ uri: photo }} coordinate={data.latlon} key={data.uid}>
+              <MapView.Callout
+                style={styles.customView}
+                onPress={() => {
+                  this.props.dispatch({
+                    type: 'Message/openChatRoom',
+                    payload: data
+                  });
+                }}
+              >
+                <View>
+                  <Text>{data.userDetail.name} :</Text>
+                  <Text>{data.message}</Text>
+                </View>
+              </MapView.Callout>
+            </MapView.Marker>
+          );
+        });
   }
 
   render() {

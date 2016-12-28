@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'dva/mobile';
+import { Navigator } from 'react-native';
 import { Scene, Router } from 'react-native-router-flux';
 
 import Splash from './components/Splash';
@@ -14,7 +15,7 @@ const RouterComponent = ({ dispatch }) => {
   }
 
   return (
-    <Router sceneStyle={{ paddingTop: 65 }}>
+    <Router sceneStyle={{ paddingTop: Navigator.NavigationBar.Styles.General.TotalNavHeight }}>
 
       <Scene
         key="splash"

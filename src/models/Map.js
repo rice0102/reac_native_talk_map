@@ -28,7 +28,7 @@ export default {
     },
     userPositionChange(state, action) {
        return { ...state, markerPosition: action.payload };
-    },
+    }
   },
   effects: {
     * updateUserPosition({ payload }, { call, put }) {
@@ -50,39 +50,40 @@ export default {
             dispatch({ type: 'fetchSuccess', payload: val });
           });
 
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            dispatch({
-              type: 'getCurrentPosition',
-              payload: {
-                  latitude: position.coords.latitude,
-                  longitude: position.coords.longitude,
-                  latitudeDelta: LATITUDE_DELTA,
-                  longitudeDelta: LONGITUDE_DELTA
-              }
-            });
-          },
-          (error) => alert(error.message),
-          { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-        );
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              dispatch({
+                type: 'getCurrentPosition',
+                payload: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA
+                }
+              });
+            },
+            (error) => alert(error.message),
+            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+          );
 
-        this.watchID = navigator.geolocation.watchPosition((position) => {
-          const newRegion = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA
-          };
-          const newloaction = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          };
-          dispatch({ type: 'onRegionChange', payload: newRegion });
-          dispatch({ type: 'updateUserPosition', payload: newloaction });
-        });
-      } else {
-          Actions.auth();
-      }
+          this.watchID = navigator.geolocation.watchPosition((position) => {
+            const newRegion = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA
+            };
+            const newloaction = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            };
+            dispatch({ type: 'onRegionChange', payload: newRegion });
+            dispatch({ type: 'updateUserPosition', payload: newloaction });
+          });
+        } else {
+            navigator.geolocation.clearWatch(this.watchID);
+            Actions.auth();
+        }
      });
     }
   }
