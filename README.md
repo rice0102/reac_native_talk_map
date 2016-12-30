@@ -12,7 +12,7 @@ This project can :
 
 #Demo
 
-![alt text](https://github.com/rice0102/react-native-talkmap/blob/master/talkmap.PNG "TalkMap")
+![alt text](https://github.com/rice0102/react-native-talkmap/blob/master/k155qt4ytE.gif "TalkMap")
 
 
 #Tools
