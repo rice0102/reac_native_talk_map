@@ -5,10 +5,20 @@ Use react-native with firebase create an app. (android now)
 
 This project can :
 
-* Login
+* Log In/Out
 * Show user loaction with google map.(trun on the GPS)
 * When click user marker show what user said last time.
 * Click other user's callout message can open the chat room and talk to him/her.
+
+此APP利用React Native + Google Map API + Firebase 實現具有地圖功能之社群軟體
+
+根據已註冊之使用者目前位置標記其座標並發表動態，且可經由Google Map滑動操作查看附近其他使用者動態，點擊其他特定使用者將開啟個人聊天室可進行即時聊天
+
+#Feature
+
+* online/offline display
+* User location and message record list
+* User image upload
 
 #Demo
 
