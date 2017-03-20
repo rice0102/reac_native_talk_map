@@ -1,7 +1,10 @@
 
 #Talk Map
 
-Use react-native with firebase create an app. (android now)
+Use react-native with firebase create an app.
+
+Google Play Store:
+https://play.google.com/store/apps/details?id=com.talk_map
 
 This project can :
 
