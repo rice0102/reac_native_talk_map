@@ -1,12 +1,17 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Image } from 'react-native';
 
 const Splash = ({ splashText }) => {
   return (
     <View style={styles.splashView}>
+      <Image
+        source={require('../images/logo.png')}
+        style={styles.splashImage}
+      />
       <Text style={styles.splashText}>
         { splashText }
       </Text>
+
     </View>
   );
 };
@@ -14,7 +19,8 @@ const Splash = ({ splashText }) => {
 const styles = {
   splashView: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   splashText: {
     fontSize: 50,

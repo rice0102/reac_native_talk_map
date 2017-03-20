@@ -63,7 +63,7 @@ export default {
               });
             },
             (error) => alert(error.message),
-            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+            { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
           );
 
           this.watchID = navigator.geolocation.watchPosition((position) => {
@@ -79,10 +79,13 @@ export default {
             };
             dispatch({ type: 'onRegionChange', payload: newRegion });
             dispatch({ type: 'updateUserPosition', payload: newloaction });
-          });
+          },
+          (error) => alert(error.message),
+          { enableHighAccuracy: true, distanceFilter: 10, timeout: 20000, maximumAge: 1000 }
+          );
         } else {
             navigator.geolocation.clearWatch(this.watchID);
-            Actions.auth();
+            Actions.auth({ type: 'reset' });
         }
      });
     }
